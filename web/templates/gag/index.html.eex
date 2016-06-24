@@ -1,0 +1,1 @@
+<%= link "Create Gag", to: gag_path(@conn, :create), method: :post %>
