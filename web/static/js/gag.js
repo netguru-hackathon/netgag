@@ -12,17 +12,18 @@ let Gag = {
     let postButton   = document.getElementById("msg-submit")
     let gagChannel   = socket.channel("gag:" + slug)
 
-    // postButton.addEventListener("click", e => {
-    //   let payload = {body: msgInput.value, at: Player.getCurrentTime()}
-    //   vidChannel.push("new_annotation", payload)
-    //             .receive("error", e => console.log(e))
-    //   msgInput.value = ""
-    // })
+    postButton.addEventListener("click", e => {
+      let payload = {body: msgInput.value}
+      gagChannel.push("new_comment", payload)
+                .receive("error", e => console.log(e))
+      msgInput.value = ""
+    })
 
-    // vidChannel.on("new_annotation", (resp) => {
-    //   vidChannel.params.last_seen_id = resp.id
-    //   this.renderAnnotation(msgContainer, resp)
-    // })
+    gagChannel.on("new_comment", (resp) => {
+      console.log(resp)
+      // vidChannel.params.last_seen_id = resp.id
+      // this.renderAnnotation(msgContainer, resp)
+    })
 
     // msgContainer.addEventListener("click", e => {
     //   e.preventDefault()
