@@ -1,5 +1,3 @@
-<strong><%= gag_url(@conn, :show, @gag) %></strong>
-
 <div class="row">
   <div class="col-sm-7">
     <%= content_tag :div, id: "gag",
@@ -10,6 +8,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">Comments</h3>
+        <span class="gag-url"><%= gag_url(@conn, :show, @gag) %></spen>
       </div>
       <div class="panel-footer">
         <input type="text" id="msg-user" class="form-control" placeholder="Your name" value="Guest"/>
