@@ -57,7 +57,7 @@ let Gag = {
     console.log(current_gag)
     gagDiv.innerHTML = `
     <h3>${current_gag.caption}</h3>
-    <img src="${current_gag.images.large}" />
+    <img class="img-responsive" src="${current_gag.images.large}" />
     <div>
       upvotes: ${current_gag.votes.count}
     </div>
