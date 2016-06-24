@@ -8,12 +8,16 @@ let Gag = {
 
   onReady(slug, socket){
     let msgContainer = document.getElementById("msg-container")
+    let msgUser      = document.getElementById("msg-user")
     let msgInput     = document.getElementById("msg-input")
     let postButton   = document.getElementById("msg-submit")
     let gagChannel   = socket.channel("gag:" + slug)
 
     postButton.addEventListener("click", e => {
-      let payload = {body: msgInput.value, user: "Kuba"}
+      if (msgInput.value === "" || msgUser.value === "") {
+        alert("Empty field");
+      }
+      let payload = {body: msgInput.value, user: msgUser.value}
       gagChannel.push("new_comment", payload)
                 .receive("error", e => console.log(e))
       msgInput.value = ""
@@ -44,7 +48,7 @@ let Gag = {
       <b>${this.esc(user)}</b>: ${this.esc(body)}
     </a>
     `
-    msgContainer.appendChild(template)
+    msgContainer.insertBefore(template, msgContainer.firstChild)
     msgContainer.scrollTop = msgContainer.scrollHeight
   },
 
