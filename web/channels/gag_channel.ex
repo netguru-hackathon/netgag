@@ -13,7 +13,6 @@ defmodule Netgag.GagChannel do
     next_page = response["paging"]["next"]
     memes = response["data"]
     current_meme = List.first(memes)
-    # IEx.pry
 
     comments = Repo.all(
       from a in assoc(gag, :comments),
@@ -21,12 +20,7 @@ defmodule Netgag.GagChannel do
         limit: 200
     )
     resp = %{comments: Phoenix.View.render_many(comments, CommentView, "comment.json"), current_meme: current_meme}
-    {:ok, resp, assign(socket, :slug, slug)}
-    # socket = socket
-    # |> assign(:slug, slug)
-    # |> assign(:memes, memes)
-    # |> assign(:current_meme, current_meme)
-    # {:ok, resp, socket}
+    {:ok, resp, socket |> assign(:slug, slug) |> assign(:memes, memes) |> assign(:current_meme, current_meme)}
   end
 
   def handle_in("next_gag", params, socket) do
@@ -61,6 +55,4 @@ defmodule Netgag.GagChannel do
   def get_gag_by_slug(slug) do
     Repo.get_by(Gag, slug: slug)
   end
-
-  def get_active_meme()
 end
