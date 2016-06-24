@@ -8,7 +8,7 @@ defmodule Netgag.GagChannel do
     gag = get_gag_by_slug(slug)
     comments = Repo.all(
       from a in assoc(gag, :comments),
-        order_by: [asc: a.id],
+        order_by: [desc: a.id],
         limit: 200
     )
     resp = %{comments: Phoenix.View.render_many(comments, CommentView, "comment.json")}

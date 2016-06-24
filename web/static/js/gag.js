@@ -20,75 +20,38 @@ let Gag = {
     })
 
     gagChannel.on("new_comment", (resp) => {
-      console.log(resp)
-      // vidChannel.params.last_seen_id = resp.id
-      // this.renderAnnotation(msgContainer, resp)
+      this.renderComment(msgContainer, resp)
     })
 
-    // msgContainer.addEventListener("click", e => {
-    //   e.preventDefault()
-    //   let seconds = e.target.getAttribute("data-seek") ||
-    //                 e.target.parentNode.getAttribute("data-seek")
-    //   if (!seconds) { return }
-
-    //   Player.seekTo(seconds)
-    // })
-
     gagChannel.join()
-      .receive("ok", resp => console.log("joined the video channel", resp) )
+      .receive("ok", (resp) => {
+        this.renderComments(msgContainer, resp.comments)
+      })
       .receive("error", reason => console.log("join failed", reason) )
-      // .receive("ok", (resp) => {
-      //   let ids = resp.annotations.map(ann => ann.id)
-      //   if (ids.length > 0) {
-      //     vidChannel.params.last_seen_id = Math.max(...ids)
-      //   }
-      //   this.scheduleMessages(msgContainer, resp.annotations)
-      // })
-      // .receive("error", reason => console.log("join failed", reason) )
   },
 
-  // esc(str) {
-  //   let div = document.createElement("div")
-  //   div.appendChild(document.createTextNode(str))
-  //   return div.innerHTML
-  // },
+  renderComments(msgContainer, comments) {
+    comments.filter( comment => {
+      this.renderComment(msgContainer, comment)
+    })
+  },
 
-  // renderAnnotation(msgContainer, {user, body, at}) {
-  //   let template = document.createElement("div")
+  renderComment(msgContainer, {body, user}) {
+    let template = document.createElement("div")
 
-  //   template.innerHTML = `
-  //   <a href="#" data-seek="${this.esc(at)}">
-  //     [${this.formatTime(at)}]
-  //     <b>${this.esc(user.username)}</b>: ${this.esc(body)}
-  //   </a>
-  //   `
-  //   msgContainer.appendChild(template)
-  //   msgContainer.scrollTop = msgContainer.scrollHeight
-  // },
+    template.innerHTML = `
+    <a href="#">
+      <b>${this.esc(user)}</b>: ${this.esc(body)}
+    </a>
+    `
+    msgContainer.appendChild(template)
+    msgContainer.scrollTop = msgContainer.scrollHeight
+  },
 
-  // scheduleMessages(msgContainer, annotations) {
-  //   setTimeout(() => {
-  //     let ctime = Player.getCurrentTime()
-  //     let remaining = this.renderAtTime(annotations, ctime, msgContainer)
-  //     this.scheduleMessages(msgContainer, remaining)
-  //   }, 1000)
-  // },
-
-  // renderAtTime(annotations, seconds, msgContainer) {
-  //   return annotations.filter( ann => {
-  //     if(ann.at > seconds) {
-  //       return true
-  //     } else {
-  //       this.renderAnnotation(msgContainer, ann)
-  //       return false
-  //     }
-  //   })
-  // },
-
-  // formatTime(at) {
-  //   let date = new Date(null)
-  //   date.setSeconds(at / 1000)
-  //   return date.toISOString().substr(14, 5)
-  // }
+  esc(str) {
+    let div = document.createElement("div")
+    div.appendChild(document.createTextNode(str))
+    return div.innerHTML
+  },
 }
 export default Gag
