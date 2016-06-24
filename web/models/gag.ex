@@ -22,5 +22,20 @@ defmodule Netgag.Gag do
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields, @optional_fields)
+    |> add_slug
+  end
+
+  defp add_slug(changeset) do
+    put_change(changeset, :slug, generate_slug)
+  end
+
+  defp generate_slug do
+    UUID.uuid4()
+  end
+
+  defimpl Phoenix.Param, for: Netgag.Gag do
+    def to_param(%{slug: slug}) do
+      slug
+    end
   end
 end
