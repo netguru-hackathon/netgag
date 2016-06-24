@@ -1,12 +1,12 @@
 <div class="row">
   <div class="col-sm-7">
     <%= content_tag :div, id: "gag",
-          data: [slug: @gag.slug] do %>
-    <% end %>
+          data: [slug: @gag.slug] do %><% end %>
   </div>
   <div class="col-sm-5">
     <div class="panel panel-default">
       <div class="panel-heading">
+        <button id="next-button" class="btn btn-primary">Next</button>
         <h3 class="panel-title">Comments</h3>
         <span class="gag-url"><%= gag_url(@conn, :show, @gag) %></spen>
       </div>
@@ -21,9 +21,7 @@ type="submit">
           Post
         </button>
       </div>
-      <div id="msg-container" class="panel-body annotations">
-
-      </div>
+      <div id="msg-container" class="panel-body annotations"></div>
     </div>
   </div>
 </div>

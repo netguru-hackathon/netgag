@@ -13,8 +13,10 @@ let Gag = {
     let postButton   = document.getElementById("msg-submit")
     let gagDiv   = document.getElementById("gag")
     let gagChannel   = socket.channel("gag:" + slug)
+    let nextButton = document.getElementById("next-button");
 
     postButton.addEventListener("click", e => {
+      e.preventDefault()
       if (msgInput.value === "" || msgUser.value === "") {
         alert("Empty field")
         return
@@ -25,14 +27,28 @@ let Gag = {
       msgInput.value = ""
     })
 
+    nextButton.addEventListener("click", e => {
+      e.preventDefault()
+      gagChannel.push("next_gag")
+                .receive("error", e => console.log(e))
+    })
+
     gagChannel.on("new_comment", (resp) => {
       this.renderComment(msgContainer, resp)
     })
 
+    gagChannel.on("new_gag", (resp) => {
+      console.log(resp)
+      this.renderGag(gagDiv, resp.gag)
+    })
+
     gagChannel.join()
       .receive("ok", (resp) => {
-        this.renderComments(msgContainer, resp.comments)
-        this.renderGag(gagDiv, resp.current_meme)
+        console.log(msgContainer.innerHTML)
+        if (gagDiv.innerHTML === "") {
+          this.renderComments(msgContainer, resp.comments)
+          this.renderGag(gagDiv, resp.current_meme)
+        }
       })
       .receive("error", reason => console.log("join failed", reason) )
   },

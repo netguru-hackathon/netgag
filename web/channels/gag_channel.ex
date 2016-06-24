@@ -29,6 +29,15 @@ defmodule Netgag.GagChannel do
     # {:ok, resp, socket}
   end
 
+  def handle_in("next_gag", params, socket) do
+    http_response = HTTPoison.get! "http://infinigag.k3min.eu/"
+    {:ok, response} = Poison.decode http_response.body
+    next_page = response["paging"]["next"]
+    memes = response["data"]
+    next_meme = List.last(memes)
+    broadcast! socket, "new_gag", %{gag: next_meme}
+  end
+
   def handle_in("new_comment", params, socket) do
     gag = get_gag_by_slug(socket.assigns.slug)
     changeset =
