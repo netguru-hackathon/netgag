@@ -7,7 +7,8 @@ defmodule Netgag.GagController do
   end
 
   def create(conn, _params) do
-    redirect(conn, to: gag_path(conn, :index))
+    gag = Repo.insert!(Gag.changeset(%Gag{}, %{}))
+    redirect(conn, to: gag_path(conn, :show, gag))
   end
 
   def show(conn, %{"id" => slug}) do

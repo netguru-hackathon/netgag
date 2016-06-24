@@ -10,8 +10,8 @@ defmodule Netgag.Gag do
     timestamps
   end
 
-  @required_fields ~w(slug)
-  @optional_fields ~w(section page meme)
+  @required_fields ~w()
+  @optional_fields ~w(slug section page meme)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
