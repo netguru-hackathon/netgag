@@ -2,7 +2,7 @@ defmodule Netgag.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "rooms:*", Netgag.RoomChannel
+  channel "gag:*", Netgag.GagChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket, timeout: 45_000
