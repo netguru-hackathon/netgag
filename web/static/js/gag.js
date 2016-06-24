@@ -13,7 +13,7 @@ let Gag = {
     let gagChannel   = socket.channel("gag:" + slug)
 
     postButton.addEventListener("click", e => {
-      let payload = {body: msgInput.value}
+      let payload = {body: msgInput.value, user: "Kuba"}
       gagChannel.push("new_comment", payload)
                 .receive("error", e => console.log(e))
       msgInput.value = ""

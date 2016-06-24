@@ -1,6 +1,7 @@
 defmodule Netgag.GagChannel do
   use Netgag.Web, :channel
   alias Netgag.Gag
+  alias Netgag.Repo
 
   def join("gag:" <> slug, _params, socket) do
     {:ok, assign(socket, :slug, slug)}
@@ -8,6 +9,21 @@ defmodule Netgag.GagChannel do
 
   def handle_in("new_comment", params, socket) do
     gag = Repo.get_by(Gag, slug: socket.assigns.slug)
-    broadcast! socket, "new_comment", %{gag: gag.slug}
+    changeset =
+      gag
+      |> build_assoc(:comments)
+      |> Netgag.Comment.changeset(params)
+
+    case Repo.insert(changeset) do
+      {:ok, comment} ->
+        broadcast! socket, "new_comment", %{
+          id: comment.id,
+          user: comment.user,
+          body: comment.body,
+        }
+        {:reply, :ok, socket}
+      {:error, changeset} ->
+        {:reply, {:error, %{errors: changeset}}, socket}
+    end
   end
 end
