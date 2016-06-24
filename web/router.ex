@@ -15,9 +15,9 @@ defmodule Netgag.Router do
 
   scope "/", Netgag do
     pipe_through :browser # Use the default browser stack
-    resources "/gag", GagController, only: [:index, :show, :create]
+    resources "/gag", GagController, only: [:show, :create]
     get "/watch/:id", WatchController, :show
-    get "/", PageController, :index
+    get "/", GagController, :index
   end
 
   # Other scopes may use custom stacks.
