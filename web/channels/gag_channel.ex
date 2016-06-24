@@ -8,8 +8,7 @@ defmodule Netgag.GagChannel do
   def join("gag:" <> slug, _params, socket) do
     gag = get_gag_by_slug(slug)
 
-    http_response = HTTPoison.get! "http://infinigag.k3min.eu/"
-    {:ok, response} = Poison.decode http_response.body
+    response = fetch_memes
     next_page = response["paging"]["next"]
     memes = response["data"]
     current_meme = List.first(memes)
@@ -20,7 +19,13 @@ defmodule Netgag.GagChannel do
         limit: 200
     )
     resp = %{comments: Phoenix.View.render_many(comments, CommentView, "comment.json"), current_meme: current_meme}
-    {:ok, resp, socket |> assign(:slug, slug) |> assign(:memes, memes) |> assign(:current_meme, current_meme)}
+    {:ok, resp, socket |> assign(:slug, slug) |> assign(:memes, memes) |> assign(:current_meme, current_meme) |> assign(:next_page, next_page)}
+  end
+
+  def fetch_memes(page \\ nil) do
+    http_response = HTTPoison.get! "http://infinigag.k3min.eu/#{page}"
+    {:ok, response} = Poison.decode http_response.body
+    response
   end
 
   def handle_in("next_gag", params, socket) do
