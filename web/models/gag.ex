@@ -6,6 +6,7 @@ defmodule Netgag.Gag do
     field :section, :string
     field :page, :string
     field :meme, :string
+    has_many :comments, Netgag.Comment
 
     timestamps
   end
