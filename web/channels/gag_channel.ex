@@ -3,16 +3,30 @@ defmodule Netgag.GagChannel do
   alias Netgag.Gag
   alias Netgag.Repo
   alias Netgag.CommentView
+  require IEx
 
   def join("gag:" <> slug, _params, socket) do
     gag = get_gag_by_slug(slug)
+
+    http_response = HTTPoison.get! "http://infinigag.k3min.eu/"
+    {:ok, response} = Poison.decode http_response.body
+    next_page = response["paging"]["next"]
+    memes = response["data"]
+    current_meme = List.first(memes)
+    # IEx.pry
+
     comments = Repo.all(
       from a in assoc(gag, :comments),
         order_by: [asc: a.id],
         limit: 200
     )
-    resp = %{comments: Phoenix.View.render_many(comments, CommentView, "comment.json")}
+    resp = %{comments: Phoenix.View.render_many(comments, CommentView, "comment.json"), current_meme: current_meme}
     {:ok, resp, assign(socket, :slug, slug)}
+    # socket = socket
+    # |> assign(:slug, slug)
+    # |> assign(:memes, memes)
+    # |> assign(:current_meme, current_meme)
+    # {:ok, resp, socket}
   end
 
   def handle_in("new_comment", params, socket) do
@@ -38,4 +52,6 @@ defmodule Netgag.GagChannel do
   def get_gag_by_slug(slug) do
     Repo.get_by(Gag, slug: slug)
   end
+
+  def get_active_meme()
 end

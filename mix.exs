@@ -19,7 +19,7 @@ defmodule Netgag.Mixfile do
   def application do
     [mod: {Netgag, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex]]
+                    :phoenix_ecto, :postgrex, :httpoison]]
   end
 
   # Specifies which paths to compile per environment.
@@ -37,7 +37,8 @@ defmodule Netgag.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"},
-     {:uuid, "~> 1.1" }]
+     {:uuid, "~> 1.1" },
+     {:httpoison, "~> 0.8.0"}]
   end
 
   # Aliases are shortcut or tasks specific to the current project.

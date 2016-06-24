@@ -11,6 +11,7 @@ let Gag = {
     let msgUser      = document.getElementById("msg-user")
     let msgInput     = document.getElementById("msg-input")
     let postButton   = document.getElementById("msg-submit")
+    let gagDiv   = document.getElementById("gag")
     let gagChannel   = socket.channel("gag:" + slug)
 
     postButton.addEventListener("click", e => {
@@ -31,8 +32,17 @@ let Gag = {
     gagChannel.join()
       .receive("ok", (resp) => {
         this.renderComments(msgContainer, resp.comments)
+        this.renderGag(gagDiv, resp.current_meme)
       })
       .receive("error", reason => console.log("join failed", reason) )
+  },
+
+  renderGag(gagDiv, current_gag) {
+    console.log(current_gag)
+    gagDiv.innerHTML = `
+    <h3>${current_gag.caption}</h3>
+    <img src="${current_gag.images.large}" />
+    `
   },
 
   renderComments(msgContainer, comments) {
