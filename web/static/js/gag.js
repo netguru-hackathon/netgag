@@ -54,14 +54,17 @@ let Gag = {
   },
 
   renderGag(gagDiv, current_gag) {
+    let header = `<h3>${current_gag.caption}</h3>`
+    let footer = `<div>upvotes: ${current_gag.votes.count}</div>`
+    let media = ""
+    if(current_gag.media) {
+      media = `<video width="100%" controls><source src="${current_gag.media.mp4}" type="video/mp4"></video>`
+    } else {
+      media = `<img class="img-responsive" src="${current_gag.images.large}" />`
+    }
+
     console.log(current_gag)
-    gagDiv.innerHTML = `
-    <h3>${current_gag.caption}</h3>
-    <img class="img-responsive" src="${current_gag.images.large}" />
-    <div>
-      upvotes: ${current_gag.votes.count}
-    </div>
-    `
+    gagDiv.innerHTML = header + media + footer
   },
 
   renderComments(msgContainer, comments) {
