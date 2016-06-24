@@ -58,7 +58,7 @@ let Gag = {
     let footer = `<div>upvotes: ${current_gag.votes.count}</div>`
     let media = ""
     if(current_gag.media) {
-      media = `<video width="100%" controls><source src="${current_gag.media.mp4}" type="video/mp4"></video>`
+      media = `<video width="100%" autoplay loop><source src="${current_gag.media.mp4}" type="video/mp4"></video>`
     } else {
       media = `<img class="img-responsive" src="${current_gag.images.large}" />`
     }
