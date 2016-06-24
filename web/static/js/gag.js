@@ -15,7 +15,8 @@ let Gag = {
 
     postButton.addEventListener("click", e => {
       if (msgInput.value === "" || msgUser.value === "") {
-        alert("Empty field");
+        alert("Empty field")
+        return
       }
       let payload = {body: msgInput.value, user: msgUser.value}
       gagChannel.push("new_comment", payload)
