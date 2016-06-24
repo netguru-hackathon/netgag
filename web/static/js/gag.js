@@ -2,14 +2,11 @@ let Gag = {
 
   init(socket, element){ if(!element){ return }
     let slug = element.getAttribute("data-slug")
-    let section = element.getAttribute("data-section")
-    let page  = element.getAttribute("data-page")
-    let meme  = element.getAttribute("data-meme")
     socket.connect()
-    this.onReady(slug, section, page, meme, socket)
+    this.onReady(slug, socket)
   },
 
-  onReady(slug, section, page, meme, socket){
+  onReady(slug, socket){
     let msgContainer = document.getElementById("msg-container")
     let msgInput     = document.getElementById("msg-input")
     let postButton   = document.getElementById("msg-submit")

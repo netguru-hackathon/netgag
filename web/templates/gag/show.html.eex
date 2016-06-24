@@ -3,7 +3,7 @@
 <div class="row">
   <div class="col-sm-7">
     <%= content_tag :div, id: "gag",
-          data: [slug: @gag.slug, section: @gag.section, page: @gag.page, meme: @gag.meme] do %>
+          data: [slug: @gag.slug] do %>
     <% end %>
   </div>
   <div class="col-sm-5">
