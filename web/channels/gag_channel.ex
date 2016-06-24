@@ -23,7 +23,8 @@ defmodule Netgag.GagChannel do
   end
 
   def fetch_memes(page \\ nil) do
-    http_response = HTTPoison.get! "http://infinigag.k3min.eu/#{page}"
+    url = "http://infinigag.k3min.eu/hot/#{page}"
+    http_response = HTTPoison.get! url
     {:ok, response} = Poison.decode http_response.body
     response
   end
@@ -32,8 +33,15 @@ defmodule Netgag.GagChannel do
     current_meme = socket.assigns.current_meme
     memes = socket.assigns.memes
     next_meme = get_next_meme(memes, current_meme)
+    next_page = socket.assigns.next_page
+    if !next_meme do
+      response = fetch_memes(next_page)
+      next_page = response["paging"]["next"]
+      memes = response["data"]
+      next_meme = List.first(memes)
+    end
     broadcast! socket, "new_gag", %{gag: next_meme}
-    {:reply, :ok, socket |> assign(:current_meme, next_meme)}
+    {:reply, :ok, socket |> assign(:current_meme, next_meme) |> assign(:memes, memes) |> assign(:next_page, next_page) }
   end
 
   def handle_in("new_comment", params, socket) do
