@@ -2,13 +2,21 @@ defmodule Netgag.GagChannel do
   use Netgag.Web, :channel
   alias Netgag.Gag
   alias Netgag.Repo
+  alias Netgag.CommentView
 
   def join("gag:" <> slug, _params, socket) do
-    {:ok, assign(socket, :slug, slug)}
+    gag = get_gag_by_slug(slug)
+    comments = Repo.all(
+      from a in assoc(gag, :comments),
+        order_by: [asc: a.id],
+        limit: 200
+    )
+    resp = %{comments: Phoenix.View.render_many(comments, CommentView, "comment.json")}
+    {:ok, resp, assign(socket, :slug, slug)}
   end
 
   def handle_in("new_comment", params, socket) do
-    gag = Repo.get_by(Gag, slug: socket.assigns.slug)
+    gag = get_gag_by_slug(socket.assigns.slug)
     changeset =
       gag
       |> build_assoc(:comments)
@@ -25,5 +33,9 @@ defmodule Netgag.GagChannel do
       {:error, changeset} ->
         {:reply, {:error, %{errors: changeset}}, socket}
     end
+  end
+
+  def get_gag_by_slug(slug) do
+    Repo.get_by(Gag, slug: slug)
   end
 end
