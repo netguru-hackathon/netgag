@@ -6,3 +6,12 @@
   font-size: 10px;
   font-weight: bold;
 }
+
+.gag-button {
+  margin: auto;
+  text-align: center;
+}
+
+.gag-button .btn {
+  font-size: 40px;
+}

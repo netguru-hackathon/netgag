@@ -1,1 +1,3 @@
-<%= link "Create Gag", to: gag_path(@conn, :create), method: :post %>
+<div class="gag-button">
+  <%= link "Start 9gaggin'", to: gag_path(@conn, :create), method: :post, class: "btn btn-primary" %>
+</div>
