@@ -40,6 +40,7 @@ defmodule Netgag.GagChannel do
   end
 
   def handle_in("next_gag", params, socket) do
+    gag = get_gag_by_slug(socket.assigns.slug)
     current_meme = socket.assigns.current_meme
     memes = socket.assigns.memes
     next_meme = get_next_meme(memes, current_meme)
@@ -50,6 +51,8 @@ defmodule Netgag.GagChannel do
       memes = response["data"]
       next_meme = List.first(memes)
     end
+    changeset = Gag.changeset(gag, %{meme: next_meme["id"]})
+    res = Repo.update(changeset)
     broadcast! socket, "new_gag", %{gag: next_meme}
     {:reply, :ok, socket |> assign(:current_meme, next_meme) |> assign(:memes, memes) |> assign(:next_page, next_page) }
   end
