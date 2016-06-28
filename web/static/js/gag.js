@@ -11,20 +11,21 @@ let Gag = {
     let msgUser      = document.getElementById("msg-user")
     let msgInput     = document.getElementById("msg-input")
     let postButton   = document.getElementById("msg-submit")
-    let gagDiv   = document.getElementById("gag")
+    let gagDiv       = document.getElementById("gag")
     let gagChannel   = socket.channel("gag:" + slug)
-    let nextButton = document.getElementById("next-button");
+    let nextButton   = document.getElementById("next-button")
 
     postButton.addEventListener("click", e => {
       e.preventDefault()
-      if (msgInput.value === "" || msgUser.value === "") {
-        alert("Empty field")
-        return
+      this.sendMessage(msgInput, msgUser, gagChannel)
+    })
+
+    msgInput.addEventListener("keypress", e => {
+      let key = e.which || e.keyCode
+      if (key === 13) { // enter
+        e.preventDefault()
+        this.sendMessage(msgInput, msgUser, gagChannel)
       }
-      let payload = {body: msgInput.value, user: msgUser.value}
-      gagChannel.push("new_comment", payload)
-                .receive("error", e => console.log(e))
-      msgInput.value = ""
     })
 
     nextButton.addEventListener("click", e => {
@@ -51,6 +52,17 @@ let Gag = {
         }
       })
       .receive("error", reason => console.log("join failed", reason) )
+  },
+
+  sendMessage(msgInput, msgUser, gagChannel) {
+    if (msgInput.value === "" || msgUser.value === "") {
+      alert("Empty field")
+      return
+    }
+    let payload = {body: msgInput.value, user: msgUser.value}
+    gagChannel.push("new_comment", payload)
+              .receive("error", e => console.log(e))
+    msgInput.value = ""
   },
 
   renderGag(gagDiv, current_gag) {
