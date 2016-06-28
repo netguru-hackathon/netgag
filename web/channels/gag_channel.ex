@@ -41,9 +41,9 @@ defmodule Netgag.GagChannel do
 
   def handle_in("next_gag", params, socket) do
     gag = get_gag_by_slug(socket.assigns.slug)
-    current_meme = socket.assigns.current_meme
+    current_meme_id = gag.meme
     memes = socket.assigns.memes
-    next_meme = get_next_meme(memes, current_meme)
+    next_meme = get_next_meme(memes, current_meme_id)
     next_page = socket.assigns.next_page
     if !next_meme do
       response = fetch_memes(next_page)
@@ -83,18 +83,18 @@ defmodule Netgag.GagChannel do
     Repo.get_by(Gag, slug: slug)
   end
 
-  def get_next_meme(memes, current_meme) do
-   get_next_meme(memes, current_meme, false)
+  def get_next_meme(memes, current_meme_id) do
+   get_next_meme(memes, current_meme_id, false)
   end
 
-  def get_next_meme([meme | tail], current_meme, this_one) do
+  def get_next_meme([meme | tail], current_meme_id, this_one) do
     if this_one do
       meme
     else
-      if meme["id"] == current_meme["id"] do
-        get_next_meme(tail, current_meme, true)
+      if meme["id"] == current_meme_id do
+        get_next_meme(tail, current_meme_id, true)
       else
-        get_next_meme(tail, current_meme, false)
+        get_next_meme(tail, current_meme_id, false)
       end
     end
   end
