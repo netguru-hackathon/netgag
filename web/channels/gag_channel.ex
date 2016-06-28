@@ -7,11 +7,21 @@ defmodule Netgag.GagChannel do
 
   def join("gag:" <> slug, _params, socket) do
     gag = get_gag_by_slug(slug)
-
-    response = fetch_memes
-    next_page = response["paging"]["next"]
+    if gag.page == nil do
+      response = fetch_memes
+    else
+      response = fetch_memes(gag.page)
+    end
     memes = response["data"]
     current_meme = List.first(memes)
+    if gag.meme == nil do
+      current_meme = List.first(memes)
+      changeset = Gag.changeset(gag, %{meme: current_meme["id"]})
+      res = Repo.update(changeset)
+    else
+      current_meme = Enum.find(memes, fn(meme) -> meme["id"] == gag.meme end)
+    end
+    next_page = response["paging"]["next"]
 
     comments = Repo.all(
       from a in assoc(gag, :comments),
