@@ -50,6 +50,8 @@ defmodule Netgag.GagChannel do
       next_page = response["paging"]["next"]
       memes = response["data"]
       next_meme = List.first(memes)
+      changeset = Gag.changeset(gag, %{page: next_meme["id"]})
+      res = Repo.update(changeset)
     end
     changeset = Gag.changeset(gag, %{meme: next_meme["id"]})
     res = Repo.update(changeset)
