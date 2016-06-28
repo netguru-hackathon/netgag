@@ -27,7 +27,11 @@ defmodule Netgag.Gag do
   end
 
   defp add_slug(changeset) do
-    put_change(changeset, :slug, generate_slug)
+    if changeset.model.slug == nil do
+      put_change(changeset, :slug, generate_slug)
+    else
+      changeset
+    end
   end
 
   defp generate_slug do
