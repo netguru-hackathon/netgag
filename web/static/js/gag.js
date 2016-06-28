@@ -21,17 +21,22 @@ let Gag = {
     })
 
     msgInput.addEventListener("keypress", e => {
-      let key = e.which || e.keyCode
-      if (key === 13) { // enter
+      if (this.getKey(e) === 13) { // enter
         e.preventDefault()
         this.sendMessage(msgInput, msgUser, gagChannel)
       }
     })
 
+    document.addEventListener("keypress", e => {
+      if (this.getKey(e) === 93) { // ]
+        e.preventDefault()
+        this.nextGag(gagChannel)
+      }
+    })
+
     nextButton.addEventListener("click", e => {
       e.preventDefault()
-      gagChannel.push("next_gag")
-                .receive("error", e => console.log(e))
+      this.nextGag(gagChannel)
     })
 
     gagChannel.on("new_comment", (resp) => {
@@ -52,6 +57,15 @@ let Gag = {
         }
       })
       .receive("error", reason => console.log("join failed", reason) )
+  },
+
+  getKey(event) {
+    return event.which || event.keyCode
+  },
+
+  nextGag(gagChannel) {
+    gagChannel.push("next_gag")
+              .receive("error", e => console.log(e))
   },
 
   sendMessage(msgInput, msgUser, gagChannel) {
