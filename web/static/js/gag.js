@@ -44,13 +44,12 @@ let Gag = {
     })
 
     gagChannel.on("new_gag", (resp) => {
-      console.log(resp)
-      this.renderGag(gagDiv, resp.gag)
+      gagChannel.push("assign_memes", resp)
+      this.renderGag(gagDiv, resp.current_meme)
     })
 
     gagChannel.join()
       .receive("ok", (resp) => {
-        console.log(msgContainer.innerHTML)
         if (gagDiv.innerHTML === "") {
           this.renderComments(msgContainer, resp.comments)
           this.renderGag(gagDiv, resp.current_meme)
@@ -89,7 +88,6 @@ let Gag = {
       media = `<img class="img-responsive" src="${current_gag.images.large}" />`
     }
 
-    console.log(current_gag)
     gagDiv.innerHTML = header + media + footer
   },
 
